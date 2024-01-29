@@ -1,0 +1,11 @@
+version: "3"
+services:
+  python3:
+    container_name: LA_python3
+    build: .
+    volumes:
+      - ./python:/python
+    working_dir: /python
+    command: python3 app.py
+    environment:
+      - TZ=Asia/Tokyo
