@@ -1,0 +1,6 @@
+discordwebhook
+requests
+sqlalchemy
+PyMySQL
+ping3
+python-dotenv
