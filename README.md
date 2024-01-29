@@ -1,0 +1,2 @@
+# LogAggregation
+NGINXのアクセスログを集計してWebhookへポスト
