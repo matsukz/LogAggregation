@@ -52,12 +52,6 @@ Session = sessionmaker(bind=engine)
 session = Session()
 #------
 
-#SQL実行
-#last = session.query(NnginxLog).filter(NnginxLog.time == "")
-#------
-
-#データ取り出し
-
 #昨日の日付
 yesterday = datetime.now(JST) - timedelta(days=1)
 yesterday = datetime(yesterday.year, yesterday.month, yesterday.day).replace(tzinfo=None)
@@ -74,15 +68,14 @@ error_data = session.query(NnginxLog).filter(and_(twoDaysAgo< NnginxLog.time, Nn
 #msg送信準備
 all_time = yesterday.strftime("%Y年%m月%d日")
 msg = f"{all_time}の集計結果\n"
-msg += f"許可　　　：{allow_data} ({round((allow_data/all_data)*100,3)}%)\n"
-msg += f"拒否　　　：{deny_data} ({round((deny_data/all_data)*100,3)}%)\n"
-msg += f"転送エラー：{error_data} ({round((error_data/all_data)*100,3)}%)\n"
-msg += f"総アクセス：{all_data}\n"
+msg += f"許可　　　：{'{:>4}'.format(allow_data)} ({round((allow_data/all_data)*100,3)}%)\n"#全角スペースに注意
+msg += f"拒否　　　：{'{:>4}'.format(deny_data)} ({round((deny_data/all_data)*100,3)}%)\n"#全角スペースに注意
+msg += f"転送エラー：{'{:>4}'.format(error_data)} ({round((error_data/all_data)*100,3)}%)\n"
+msg += "----------------------------\n"
+msg += f"総アクセス：{'{:>4}'.format(all_data)}\n"
 print(msg)
 
-# for i in last:
-#     print(f"id={i.id} IP={i.remote_addr}")
-#------
+#-------
 
 #セッション終了
 session.close()
