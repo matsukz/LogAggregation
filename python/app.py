@@ -79,8 +79,7 @@ print(msg)
 #msg送信
 discord = Discord(url=os.environ["Webhook"])
 discord.post(
-    content=msg,
-    username="NGINXアクセスログ"
+    content=msg
 )
 #-------
 
