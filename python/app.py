@@ -68,13 +68,20 @@ error_data = session.query(NnginxLog).filter(and_(twoDaysAgo< NnginxLog.time, Nn
 #msg送信準備
 all_time = yesterday.strftime("%Y年%m月%d日")
 msg = f"{all_time}の集計結果\n"
-msg += f"許可　　　：{'{:>4}'.format(allow_data)} ({round((allow_data/all_data)*100,3)}%)\n"#全角スペースに注意
-msg += f"拒否　　　：{'{:>4}'.format(deny_data)} ({round((deny_data/all_data)*100,3)}%)\n"#全角スペースに注意
-msg += f"転送エラー：{'{:>4}'.format(error_data)} ({round((error_data/all_data)*100,3)}%)\n"
+msg += f"許可　　　：{'{: >4}'.format(allow_data)} ({round((allow_data/all_data)*100,3)}%)\n"#全角スペースに注意
+msg += f"拒否　　　：{'{: >4}'.format(deny_data)} ({round((deny_data/all_data)*100,3)}%)\n"#全角スペースに注意
+msg += f"転送エラー：{'{: >4}'.format(error_data)} ({round((error_data/all_data)*100,3)}%)\n"
 msg += "----------------------------\n"
-msg += f"総アクセス：{'{:>4}'.format(all_data)}\n"
+msg += f"総アクセス：{'{: >4}'.format(all_data)}\n"
 print(msg)
+#-------
 
+#msg送信
+discord = Discord(url=os.environ["Webhook"])
+discord.post(
+    content=msg,
+    username="NGINXアクセスログ"
+)
 #-------
 
 #セッション終了
