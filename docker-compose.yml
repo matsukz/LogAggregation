@@ -9,3 +9,9 @@ services:
     command: python3 app.py
     environment:
       - TZ=Asia/Tokyo
+    networks:
+      - NginxLog
+
+networks:
+  NginxLog:
+    external: true
