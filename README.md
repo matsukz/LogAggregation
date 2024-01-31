@@ -8,6 +8,11 @@ https://github.com/matsukz/NginxLog-MySQL
 
 そのMySQLサーバーに向けてsqlalchemyを接続しましょう。
 
+* 実行前にネットワークを作成しましょう
+```bash
+docker network create --driver bridge --opt com.docker.network.driver.mtu=1420 NginxLog
+```
+
 # 定期実行
 ```bash
 $ crontab -e
