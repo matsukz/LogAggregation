@@ -67,8 +67,9 @@ yesterday = datetime.now(JST) - timedelta(days=1)
 yesterday = datetime(yesterday.year, yesterday.month, yesterday.day).replace(tzinfo=None)
 
 #検索実行
+#検索範囲 = 昨日の0:00 から 今日の0:00
 all_data = session.query(NnginxLog).filter(and_(yesterday < NnginxLog.time, NnginxLog.time < today)).count()
-allow_data = session.query(NnginxLog).filter(and_(yesterday<  NnginxLog.time, NnginxLog.time < today, NnginxLog.status == 200)).count()
+allow_data = session.query(NnginxLog).filter(and_(yesterday <  NnginxLog.time, NnginxLog.time < today, NnginxLog.status == 200)).count()
 deny_data = session.query(NnginxLog).filter(and_(yesterday < NnginxLog.time, NnginxLog.time < today, NnginxLog.status == 403)).count()
 error_data = session.query(NnginxLog).filter(and_(yesterday < NnginxLog.time, NnginxLog.time < today, NnginxLog.status == 502)).count()
 
