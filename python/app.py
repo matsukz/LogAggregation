@@ -21,15 +21,21 @@ from datetime import datetime, timedelta, timezone
 JST = timezone(timedelta(hours=9), "JST")
 
 #その他
+import sys
 import ping3
 import requests
 
 #環境変数読み込み
-load_dotenv()
-db_name = os.environ["db_name"]
-db_user = os.environ["db_user"]
-db_password = os.environ["db_passwd"]
-db_address = os.environ["db_address"]
+try:
+    load_dotenv()
+    db_table = os.environ["db_table"]
+    db_name = os.environ["db_name"]
+    db_user = os.environ["db_user"]
+    db_password = os.environ["db_passwd"]
+    db_address = os.environ["db_address"]
+except Exception as e:
+    print("Failed to read `.env` file")
+    sys.exit(1)
 #-------
 
 #DB接続
@@ -39,7 +45,7 @@ Base = declarative_base()
 
 #テーブル情報
 class NnginxLog(Base):
-    __tablename__ = "nginx_access_log"
+    __tablename__ = db_table
     id = Column("id",BigInteger,primary_key=True)
     time = Column("time",DateTime)
     remote_addr = Column("remote_addr",String)
