@@ -58,24 +58,25 @@ Session = sessionmaker(bind=engine)
 session = Session()
 #------
 
+#今日の日付
+today = datetime.now(JST)
+today = datetime(today.year, today.month, today.day).replace(tzinfo=None)
+
 #昨日の日付
 yesterday = datetime.now(JST) - timedelta(days=1)
 yesterday = datetime(yesterday.year, yesterday.month, yesterday.day).replace(tzinfo=None)
-#一昨日の日付
-twoDaysAgo = datetime.now(JST) - timedelta(days=2)
-twoDaysAgo = datetime(twoDaysAgo.year, twoDaysAgo.month, twoDaysAgo.day).replace(tzinfo=None)
 
 #検索実行
-all_data = session.query(NnginxLog).filter(and_(twoDaysAgo< NnginxLog.time, NnginxLog.time < yesterday)).count()
-allow_data = session.query(NnginxLog).filter(and_(twoDaysAgo< NnginxLog.time, NnginxLog.time < yesterday, NnginxLog.status == 200)).count()
-deny_data = session.query(NnginxLog).filter(and_(twoDaysAgo< NnginxLog.time, NnginxLog.time < yesterday, NnginxLog.status == 403)).count()
-error_data = session.query(NnginxLog).filter(and_(twoDaysAgo< NnginxLog.time, NnginxLog.time < yesterday, NnginxLog.status == 502)).count()
+all_data = session.query(NnginxLog).filter(and_(yesterday < NnginxLog.time, NnginxLog.time < today)).count()
+allow_data = session.query(NnginxLog).filter(and_(yesterday<  NnginxLog.time, NnginxLog.time < today, NnginxLog.status == 200)).count()
+deny_data = session.query(NnginxLog).filter(and_(yesterday < NnginxLog.time, NnginxLog.time < today, NnginxLog.status == 403)).count()
+error_data = session.query(NnginxLog).filter(and_(yesterday < NnginxLog.time, NnginxLog.time < today, NnginxLog.status == 502)).count()
 
 #msg送信準備
 all_time = yesterday.strftime("%Y年%m月%d日")
 msg = f"{all_time}の集計結果\n"
-msg += f"許可　　　：{'{: >4}'.format(allow_data)} ({round((allow_data/all_data)*100,3)}%)\n"#全角スペースに注意
-msg += f"拒否　　　：{'{: >4}'.format(deny_data)} ({round((deny_data/all_data)*100,3)}%)\n"#全角スペースに注意
+msg += f"許可　　　：{'{: >4}'.format(allow_data)} ({round((allow_data/all_data)*100,3)}%)\n" #全角スペースに注意
+msg += f"拒否　　　：{'{: >4}'.format(deny_data)} ({round((deny_data/all_data)*100,3)}%)\n" #全角スペースに注意
 msg += f"転送エラー：{'{: >4}'.format(error_data)} ({round((error_data/all_data)*100,3)}%)\n"
 msg += "----------------------------\n"
 msg += f"総アクセス：{'{: >4}'.format(all_data)}\n"
